@@ -1,8 +1,14 @@
 import { useEffect, useState } from 'react';
-import { IconInfoCircle, IconKey, IconLogout, IconUserScan } from '@tabler/icons-react';
+import {
+  IconDiamondFilled,
+  IconInfoCircle,
+  IconKey,
+  IconLogout,
+  IconUserScan,
+} from '@tabler/icons-react';
 import { useAtom } from 'jotai/index';
 import { useNavigate } from 'react-router-dom';
-import { Avatar, Menu, rem, Text, UnstyledButton } from '@mantine/core';
+import { Avatar, Group, Menu, rem, Text, UnstyledButton } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
 import API from '@/api';
@@ -66,13 +72,31 @@ const Self = () => {
         </UnstyledButton>
       </Menu.Target>
       <Menu.Dropdown>
-        <Menu.Label>{selfInfo?.name}</Menu.Label>
+        <Menu.Label>
+          <Group gap="xs">
+            <Text>{selfInfo?.name}</Text>
+            {selfInfo?.is_admin && (
+              <Group c="yellow.4">
+                <IconDiamondFilled style={menuIconStyle} />
+              </Group>
+            )}
+          </Group>
+        </Menu.Label>
         <Menu.Item leftSection={<IconInfoCircle style={menuIconStyle} />}>编辑基本信息</Menu.Item>
-        <Menu.Item leftSection={<IconUserScan style={menuIconStyle} />}>编辑用户名</Menu.Item>
+        <Menu.Item
+          leftSection={<IconUserScan style={menuIconStyle} />}
+          rightSection={
+            <Text size="xs" c="dimmed">
+              {selfInfo?.username}
+            </Text>
+          }
+        >
+          编辑用户名
+        </Menu.Item>
         <Menu.Item leftSection={<IconKey style={menuIconStyle} />}>编辑密码</Menu.Item>
 
         <Menu.Divider />
-        <Menu.Label>系统操作</Menu.Label>
+        {/*<Menu.Label>系统操作</Menu.Label>*/}
         <Menu.Item
           color="red"
           leftSection={<IconLogout style={menuIconStyle} />}
