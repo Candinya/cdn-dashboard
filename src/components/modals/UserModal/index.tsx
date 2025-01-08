@@ -283,7 +283,11 @@ const UserModal = ({ isOpen, onClose, user, userId }: UserModalProps) => {
           thumbIcon={isUpdatingRole && <IconLoader style={{ width: rem(12), height: rem(12) }} />}
           checked={isAdmin}
           onClick={() => {
-            if (!!userId) {
+            if (!userId) {
+              // 切换状态，但不用发出请求
+              setIsAdmin(!isAdmin);
+            } else {
+              // 发出权限变更请求
               updateRole(!isAdmin);
             }
           }}
