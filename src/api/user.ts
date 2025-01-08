@@ -1,4 +1,4 @@
-import { appendQuery, BackendUri } from '@/api/common';
+import { appendQuery, BackendUri } from './common';
 
 export interface UserInfoInput {
   name: string;
