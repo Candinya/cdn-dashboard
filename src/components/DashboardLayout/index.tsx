@@ -26,9 +26,9 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           <Group justify="space-between" style={{ flex: 1 }}>
             <Group>
               <Logo />
-              {/*<Title order={2} size={36} visibleFrom="sm">*/}
-              {/*  CDN*/}
-              {/*</Title>*/}
+              <Title order={2} size={36} visibleFrom="sm" c="dimmed">
+                CDN
+              </Title>
             </Group>
             <Group ml="xl">
               <Self />
