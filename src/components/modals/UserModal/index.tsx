@@ -314,6 +314,7 @@ const UserModal = ({ isOpen, onClose, user, userId }: UserModalProps) => {
                   ev.preventDefault();
                   setIsFormUnlocked(true);
                 }}
+                // disabled={userId !== selfInfo?.id && !selfInfo?.is_admin} // 非管理员没法列出用户列表，这种情况应该不会出现，可以注释掉
               >
                 编辑
               </Button>
