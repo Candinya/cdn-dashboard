@@ -39,15 +39,15 @@ const User = () => {
   });
 
   const [isEditingUser, setIsEditingUser] = useState<boolean>(false);
-  const [editingUser, setEditingUser] = useState<UserInfoWithID | null>(null);
+  const [editingUserId, setEditingUserId] = useState<number | null>(null);
 
   const createUser = () => {
-    setEditingUser(null);
+    setEditingUserId(null);
     setIsEditingUser(true);
   };
 
-  const editUser = (userInfo: UserInfoWithID) => {
-    setEditingUser(userInfo);
+  const editUser = (id: number) => {
+    setEditingUserId(id);
     setIsEditingUser(true);
   };
 
@@ -118,7 +118,7 @@ const User = () => {
                   <Table.Td>{el.name}</Table.Td>
                   <Table.Td>
                     <ButtonGroup>
-                      <Button color="yellow" onClick={() => editUser(el)}>
+                      <Button color="yellow" onClick={() => editUser(el.id)}>
                         编辑
                       </Button>
                       <Button color="red" onClick={() => deleteUser(el)} loading={isDeletingUser}>
@@ -142,8 +142,7 @@ const User = () => {
           setIsEditingUser(false);
           refreshList();
         }}
-        user={editingUser}
-        userId={editingUser?.id || null}
+        userId={editingUserId}
       />
     </>
   );

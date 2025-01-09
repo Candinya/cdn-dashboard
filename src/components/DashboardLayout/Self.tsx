@@ -96,7 +96,6 @@ const Self = () => {
       <UserModal
         isOpen={isInfoModalOpen}
         onClose={() => setIsInfoModalOpen(false)}
-        user={selfInfo || null}
         userId={selfInfo?.id || null}
       />
     </>

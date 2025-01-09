@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { IconDeviceFloppy, IconLoader, IconPencil } from '@tabler/icons-react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAtom, useAtomValue } from 'jotai';
 import {
   ActionIcon,
@@ -16,20 +16,31 @@ import {
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import API from '@/api';
-import { UserInfoCreate, UserInfoFull, UserInfoInput } from '@/api/user';
+import { UserInfoCreate, UserInfoInput } from '@/api/user';
 import { authTokenAtom } from '@/atoms/authToken';
 import { selfInfoAtom } from '@/atoms/selfInfo';
 
 interface UserModalProps {
   isOpen: boolean;
   onClose: () => void;
-  user: UserInfoFull | null;
   userId: number | null; // null 表示创建新用户
 }
-const UserModal = ({ isOpen, onClose, user, userId }: UserModalProps) => {
+const UserModal = ({ isOpen, onClose, userId }: UserModalProps) => {
   // 状态管理
   const [{ data: selfInfo }] = useAtom(selfInfoAtom);
   const authToken = useAtomValue(authTokenAtom);
+
+  // 详细信息拉取请求
+  const { data: userInfo } = useQuery({
+    queryKey: ['user', 'info', userId],
+    queryFn: async () => {
+      if (userId) {
+        return await API.UserAPI.GetUserInfo(authToken!, userId);
+      } else {
+        return null;
+      }
+    },
+  });
 
   // 请求管理
   const queryClient = useQueryClient();
@@ -49,17 +60,26 @@ const UserModal = ({ isOpen, onClose, user, userId }: UserModalProps) => {
 
   // 当用户信息变更时的操作
   useEffect(() => {
-    if (userId && user) {
+    if (userInfo) {
       userInfoForm.setInitialValues({
-        name: user.name,
+        name: userInfo.name,
       });
       userInfoForm.reset();
 
-      setUsername(user.username);
+      setUsername(userInfo.username);
       setPassword('--keep-unchanged--');
-      setIsAdmin(user.is_admin);
+      setIsAdmin(userInfo.is_admin);
+    } else {
+      userInfoForm.setInitialValues({
+        name: '',
+      });
+      userInfoForm.reset();
+
+      setUsername('');
+      setPassword('');
+      setIsAdmin(false);
     }
-  }, [userId, user, isOpen]);
+  }, [userInfo, isOpen]);
 
   // 锁定不跟随主表单的项
   const [isFormUnlocked, setIsFormUnlocked] = useState<boolean>(false);
