@@ -1,24 +1,76 @@
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
-import { Button, ButtonGroup, Group, Pagination, Table, Title } from '@mantine/core';
+import { Button, ButtonGroup, Code, Group, Pagination, Table, Text, Title } from '@mantine/core';
+import { modals } from '@mantine/modals';
 import API from '@/api';
+import type { TemplateInfoWithID } from '@/api/template';
 import { authTokenAtom } from '@/atoms/authToken';
+import TemplateModal from '@/components/modals/TemplateModal';
 
 const Template = () => {
   const authToken = useAtomValue(authTokenAtom);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const queryClient = useQueryClient();
+
   const { isPending, isError, data } = useQuery({
     queryKey: ['template', 'list', currentPage],
     queryFn: () => API.TemplateAPI.GetTemplateList(authToken!, currentPage),
   });
+  const { mutate: doDelete, isPending: isDeleting } = useMutation({
+    mutationKey: ['template', 'delete'],
+    mutationFn: (templateId: number) => {
+      return API.TemplateAPI.DeleteTemplate(authToken!, templateId);
+    },
+    onSuccess: () => {
+      refreshList();
+    },
+  });
+
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
+
+  const create = () => {
+    setEditingId(null);
+    setIsEditing(true);
+  };
+
+  const editById = (id: number) => {
+    setEditingId(id);
+    setIsEditing(true);
+  };
+
+  const refreshList = () => {
+    // 刷新列表
+    queryClient.refetchQueries({
+      queryKey: ['template', 'list'],
+    });
+  };
+
+  const deleteById = (info: TemplateInfoWithID) =>
+    modals.openConfirmModal({
+      title: '删除模板',
+      centered: true,
+      children: (
+        <Text size="sm">
+          您确认要删除模板 <Code>{info.name}</Code> 吗？
+        </Text>
+      ),
+      labels: { confirm: '确认删除', cancel: '取消' },
+      confirmProps: { color: 'red' },
+      onConfirm: () => {
+        doDelete(info.id);
+      },
+    });
 
   return (
     <>
       <Group>
         <Title order={2}>模板</Title>
-        <Button color="green">新增</Button>
+        <Button color="green" onClick={create}>
+          新增
+        </Button>
       </Group>
 
       <Table highlightOnHover mt="md">
@@ -44,8 +96,12 @@ const Template = () => {
                   <Table.Td>{el.description}</Table.Td>
                   <Table.Td>
                     <ButtonGroup>
-                      <Button color="yellow">编辑</Button>
-                      <Button color="red">删除</Button>
+                      <Button color="yellow" onClick={() => editById(el.id)}>
+                        编辑
+                      </Button>
+                      <Button color="red" onClick={() => deleteById(el)}>
+                        删除
+                      </Button>
                     </ButtonGroup>
                   </Table.Td>
                 </Table.Tr>
@@ -57,6 +113,15 @@ const Template = () => {
           </>
         )}
       </Table>
+
+      <TemplateModal
+        isOpen={isEditing}
+        onClose={() => {
+          setIsEditing(false);
+          refreshList();
+        }}
+        id={editingId}
+      />
     </>
   );
 };

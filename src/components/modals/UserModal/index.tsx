@@ -18,7 +18,7 @@ import {
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import API from '@/api';
-import { UserInfoCreate, UserInfoInput } from '@/api/user';
+import type { UserInfoCreate, UserInfoInput } from '@/api/user';
 import { authTokenAtom } from '@/atoms/authToken';
 import { selfInfoAtom } from '@/atoms/selfInfo';
 
@@ -47,12 +47,14 @@ const UserModal = ({ isOpen, onClose, userId }: UserModalProps) => {
   // 请求管理
   const queryClient = useQueryClient();
 
+  const emptyUserInfo = {
+    name: '',
+  };
+
   // 主表单
   const userInfoForm = useForm<UserInfoInput>({
     mode: 'uncontrolled',
-    initialValues: {
-      name: '',
-    },
+    initialValues: emptyUserInfo,
   });
 
   // 不跟随主表单变化的项
@@ -66,21 +68,18 @@ const UserModal = ({ isOpen, onClose, userId }: UserModalProps) => {
       userInfoForm.setInitialValues({
         name: userInfo.name,
       });
-      userInfoForm.reset();
 
       setUsername(userInfo.username);
       setPassword('--keep-unchanged--');
       setIsAdmin(userInfo.is_admin);
     } else {
-      userInfoForm.setInitialValues({
-        name: '',
-      });
-      userInfoForm.reset();
+      userInfoForm.setInitialValues(emptyUserInfo);
 
       setUsername('');
       setPassword('');
       setIsAdmin(false);
     }
+    userInfoForm.reset();
   }, [userInfo, isOpen]);
 
   // 锁定不跟随主表单的项
@@ -110,6 +109,9 @@ const UserModal = ({ isOpen, onClose, userId }: UserModalProps) => {
           queryKey: ['user', 'self'],
         });
       }
+      queryClient.invalidateQueries({
+        queryKey: ['user', 'info', newUserInfo.id],
+      });
       setIsUsernameUnlocked(false);
       notifications.show({
         color: 'green',
@@ -161,6 +163,9 @@ const UserModal = ({ isOpen, onClose, userId }: UserModalProps) => {
           queryKey: ['user', 'self'],
         });
       }
+      queryClient.invalidateQueries({
+        queryKey: ['user', 'info', newUserInfo.id],
+      });
       setIsAdmin(newUserInfo.is_admin);
       notifications.show({
         color: 'green',
@@ -194,6 +199,9 @@ const UserModal = ({ isOpen, onClose, userId }: UserModalProps) => {
           queryKey: ['user', 'self'],
         });
       }
+      queryClient.invalidateQueries({
+        queryKey: ['user', 'info', newUserInfo.id],
+      });
       notifications.show({
         color: 'green',
         title: '用户信息更新成功',
@@ -368,7 +376,6 @@ const UserModal = ({ isOpen, onClose, userId }: UserModalProps) => {
               <Button
                 leftSection={<IconDeviceFloppy size={14} />}
                 type="submit"
-                disabled={!userInfoForm.isTouched}
                 loading={isUpdatingUserInfo || isCreatingUser}
               >
                 保存

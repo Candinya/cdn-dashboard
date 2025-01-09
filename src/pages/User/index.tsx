@@ -28,7 +28,7 @@ const User = () => {
     queryKey: ['user', 'list', currentPage],
     queryFn: () => API.UserAPI.GetUserList(authToken!, currentPage),
   });
-  const { mutate: doDeleteUser, isPending: isDeletingUser } = useMutation({
+  const { mutate: doDeleteUser } = useMutation({
     mutationKey: ['user', 'delete'],
     mutationFn: (userId: number) => {
       return API.UserAPI.DeleteUser(authToken!, userId);
@@ -121,7 +121,7 @@ const User = () => {
                       <Button color="yellow" onClick={() => editUser(el.id)}>
                         编辑
                       </Button>
-                      <Button color="red" onClick={() => deleteUser(el)} loading={isDeletingUser}>
+                      <Button color="red" onClick={() => deleteUser(el)}>
                         删除
                       </Button>
                     </ButtonGroup>
