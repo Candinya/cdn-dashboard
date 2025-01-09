@@ -47,12 +47,14 @@ const TemplateModal = ({ isOpen, onClose, id }: TemplateModalProps) => {
 
   // 当信息变更时的操作
   useEffect(() => {
-    if (templateInfo) {
-      templateInfoForm.setInitialValues(templateInfo);
-    } else {
-      templateInfoForm.setInitialValues(emptyTemplateInfo);
+    if (isOpen) {
+      if (templateInfo) {
+        templateInfoForm.setInitialValues(templateInfo);
+      } else {
+        templateInfoForm.setInitialValues(emptyTemplateInfo);
+      }
+      templateInfoForm.reset();
     }
-    templateInfoForm.reset();
   }, [templateInfo, isOpen]);
 
   // 锁定表单

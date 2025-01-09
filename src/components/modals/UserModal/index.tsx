@@ -64,22 +64,24 @@ const UserModal = ({ isOpen, onClose, userId }: UserModalProps) => {
 
   // 当用户信息变更时的操作
   useEffect(() => {
-    if (userInfo) {
-      userInfoForm.setInitialValues({
-        name: userInfo.name,
-      });
+    if (isOpen) {
+      if (userInfo) {
+        userInfoForm.setInitialValues({
+          name: userInfo.name,
+        });
 
-      setUsername(userInfo.username);
-      setPassword('--keep-unchanged--');
-      setIsAdmin(userInfo.is_admin);
-    } else {
-      userInfoForm.setInitialValues(emptyUserInfo);
+        setUsername(userInfo.username);
+        setPassword('--keep-unchanged--');
+        setIsAdmin(userInfo.is_admin);
+      } else {
+        userInfoForm.setInitialValues(emptyUserInfo);
 
-      setUsername('');
-      setPassword('');
-      setIsAdmin(false);
+        setUsername('');
+        setPassword('');
+        setIsAdmin(false);
+      }
+      userInfoForm.reset();
     }
-    userInfoForm.reset();
   }, [userInfo, isOpen]);
 
   // 锁定不跟随主表单的项
