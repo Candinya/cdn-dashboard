@@ -86,9 +86,9 @@ const User = () => {
       <Table highlightOnHover mt="md">
         <Table.Thead>
           <Table.Tr>
-            <Table.Th>名称</Table.Th>
-            <Table.Th>权限</Table.Th>
             <Table.Th>用户名</Table.Th>
+            <Table.Th>权限</Table.Th>
+            <Table.Th>名字</Table.Th>
             <Table.Th>操作</Table.Th>
           </Table.Tr>
         </Table.Thead>
@@ -103,11 +103,11 @@ const User = () => {
             <Table.Tbody>
               {data.list.map((el) => (
                 <Table.Tr key={el.id}>
-                  <Table.Td>{el.name}</Table.Td>
+                  <Table.Td>{el.username}</Table.Td>
                   <Table.Td>
                     {el.is_admin ? (
                       <Badge color="yellow" size="lg">
-                        管理员
+                        管理
                       </Badge>
                     ) : (
                       <Badge color="gray" size="lg">
@@ -115,7 +115,7 @@ const User = () => {
                       </Badge>
                     )}
                   </Table.Td>
-                  <Table.Td>{el.username}</Table.Td>
+                  <Table.Td>{el.name}</Table.Td>
                   <Table.Td>
                     <ButtonGroup>
                       <Button color="yellow" onClick={() => editUser(el)}>
