@@ -136,7 +136,7 @@ const UserModal = ({ isOpen, onClose, user, userId }: UserModalProps) => {
     },
   });
 
-  // 提交主表单
+  // 提交主表单：更新用户信息
   const { isPending: isUpdatingUserInfo, mutate: updateInfo } = useMutation({
     mutationKey: ['user', 'update', userId, 'info'],
     mutationFn: (input: UserInfoInput) => {
@@ -160,7 +160,7 @@ const UserModal = ({ isOpen, onClose, user, userId }: UserModalProps) => {
     },
   });
 
-  // 提交主表单
+  // 提交主表单：创建用户
   const { isPending: isCreatingUser, mutate: createUser } = useMutation({
     mutationKey: ['user', 'create'],
     mutationFn: (user: UserInfoCreate) => {

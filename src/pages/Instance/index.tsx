@@ -14,14 +14,22 @@ const LastSeenStat = ({ isManualMode, lastSeen }: LastSeenStatProps) => {
   const deltaTs = currentTs - lastSeen;
 
   return isManualMode ? (
-    <Badge color="violet">手动模式</Badge>
+    <Badge color="violet" size="lg">
+      手动模式
+    </Badge>
   ) : deltaTs < 600 ? ( // 600 秒， 10 分钟
-    <Badge color="green">在线</Badge>
+    <Badge color="green" size="lg">
+      在线
+    </Badge>
   ) : deltaTs < 3600 ? ( // 3600 秒， 1 小时
-    <Badge color="yellow">等待中</Badge>
+    <Badge color="yellow" size="lg">
+      等待中
+    </Badge>
   ) : (
     // 再多就是离线了
-    <Badge color="red">离线</Badge>
+    <Badge color="red" size="lg">
+      离线
+    </Badge>
   );
 };
 
