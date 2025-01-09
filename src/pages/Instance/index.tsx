@@ -6,13 +6,16 @@ import API from '@/api';
 import { authTokenAtom } from '@/atoms/authToken';
 
 interface LastSeenStatProps {
+  isManualMode: boolean;
   lastSeen: number;
 }
-const LastSeenStat = ({ lastSeen }: LastSeenStatProps) => {
+const LastSeenStat = ({ isManualMode, lastSeen }: LastSeenStatProps) => {
   const currentTs = new Date().getTime() / 1000; // 当前时间戳（秒）
   const deltaTs = currentTs - lastSeen;
 
-  return deltaTs < 600 ? ( // 600 秒， 10 分钟
+  return isManualMode ? (
+    <Badge color="violet">手动模式</Badge>
+  ) : deltaTs < 600 ? ( // 600 秒， 10 分钟
     <Badge color="green">在线</Badge>
   ) : deltaTs < 3600 ? ( // 3600 秒， 1 小时
     <Badge color="yellow">等待中</Badge>
@@ -59,7 +62,7 @@ const Instance = () => {
                 <Table.Tr key={el.id}>
                   <Table.Td>{el.name}</Table.Td>
                   <Table.Td>
-                    <LastSeenStat lastSeen={el.last_seen} />
+                    <LastSeenStat isManualMode={el.is_manual_mode} lastSeen={el.last_seen} />
                   </Table.Td>
                   <Table.Td>
                     <ButtonGroup>
