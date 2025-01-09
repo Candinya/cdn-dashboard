@@ -5,12 +5,14 @@ import { useAtom, useAtomValue } from 'jotai';
 import {
   ActionIcon,
   Button,
+  Code,
   Flex,
   Group,
   Modal,
   PasswordInput,
   rem,
   Switch,
+  Text,
   TextInput,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
@@ -102,13 +104,22 @@ const UserModal = ({ isOpen, onClose, userId }: UserModalProps) => {
     mutationFn: (newUsername: string) => {
       return API.UserAPI.UpdateUserUsername(authToken!, userId!, newUsername);
     },
-    onSuccess: () => {
+    onSuccess: (newUserInfo) => {
       if (userId === selfInfo?.id) {
         queryClient.refetchQueries({
           queryKey: ['user', 'self'],
         });
       }
       setIsUsernameUnlocked(false);
+      notifications.show({
+        color: 'green',
+        title: '用户名更新成功',
+        message: (
+          <Text size="xs">
+            以后要用 <Code>{newUserInfo.username}</Code> 登录啦
+          </Text>
+        ),
+      });
     },
     onError: (e) => {
       notifications.show({
@@ -125,6 +136,11 @@ const UserModal = ({ isOpen, onClose, userId }: UserModalProps) => {
     },
     onSuccess: () => {
       setIsPasswordUnlocked(false);
+      notifications.show({
+        color: 'green',
+        title: '用户密码更新成功',
+        message: <Text size="xs">记得保护好密码哦</Text>,
+      });
     },
     onError: (e) => {
       notifications.show({
@@ -139,13 +155,22 @@ const UserModal = ({ isOpen, onClose, userId }: UserModalProps) => {
     mutationFn: (newIsAdmin: boolean) => {
       return API.UserAPI.UpdateUserRole(authToken!, userId!, newIsAdmin);
     },
-    onSuccess: (data) => {
+    onSuccess: (newUserInfo) => {
       if (userId === selfInfo?.id) {
         queryClient.refetchQueries({
           queryKey: ['user', 'self'],
         });
       }
-      setIsAdmin(data.is_admin);
+      setIsAdmin(newUserInfo.is_admin);
+      notifications.show({
+        color: 'green',
+        title: '用户权限更新成功',
+        message: (
+          <Text size="xs">
+            用户现在是 <Code>{newUserInfo.is_admin ? '管理员' : '一般用户'}</Code>
+          </Text>
+        ),
+      });
     },
     onError: (e) => {
       notifications.show({
@@ -163,12 +188,21 @@ const UserModal = ({ isOpen, onClose, userId }: UserModalProps) => {
       // 更新，那么只需要更新 input
       return API.UserAPI.UpdateUserInfo(authToken!, userId!, input);
     },
-    onSuccess: () => {
+    onSuccess: (newUserInfo) => {
       if (userId === selfInfo?.id) {
         queryClient.refetchQueries({
           queryKey: ['user', 'self'],
         });
       }
+      notifications.show({
+        color: 'green',
+        title: '用户信息更新成功',
+        message: (
+          <Text size="xs">
+            新的名字是 <Code>{newUserInfo.name}</Code>
+          </Text>
+        ),
+      });
       onClose();
     },
     onError: (e) => {
@@ -186,7 +220,16 @@ const UserModal = ({ isOpen, onClose, userId }: UserModalProps) => {
     mutationFn: (user: UserInfoCreate) => {
       return API.UserAPI.CreateUser(authToken!, user);
     },
-    onSuccess: () => {
+    onSuccess: (newUserInfo) => {
+      notifications.show({
+        color: 'green',
+        title: '用户创建成功',
+        message: (
+          <Text size="xs">
+            成功创建了登录名为 <Code>{newUserInfo.name}</Code> 的用户 (#{newUserInfo.id})
+          </Text>
+        ),
+      });
       onClose();
     },
     onError: (e) => {
