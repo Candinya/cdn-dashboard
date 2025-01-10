@@ -13,6 +13,7 @@ import {
   Title,
 } from '@mantine/core';
 import { modals } from '@mantine/modals';
+import { notifications } from '@mantine/notifications';
 import API from '@/api';
 import type { UserInfoWithID } from '@/api/user';
 import { authTokenAtom } from '@/atoms/authToken';
@@ -35,6 +36,10 @@ const User = () => {
     },
     onSuccess: () => {
       refreshList();
+      notifications.show({
+        color: 'green',
+        message: '用户删除成功',
+      });
     },
   });
 

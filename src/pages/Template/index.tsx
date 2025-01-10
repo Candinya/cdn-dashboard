@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
 import { Button, ButtonGroup, Code, Group, Pagination, Table, Text, Title } from '@mantine/core';
 import { modals } from '@mantine/modals';
+import { notifications } from '@mantine/notifications';
 import API from '@/api';
 import type { TemplateInfoWithID } from '@/api/template';
 import { authTokenAtom } from '@/atoms/authToken';
@@ -18,13 +19,17 @@ const Template = () => {
     queryKey: ['template', 'list', currentPage],
     queryFn: () => API.TemplateAPI.GetTemplateList(authToken!, currentPage),
   });
-  const { mutate: doDelete, isPending: isDeleting } = useMutation({
+  const { mutate: doDelete } = useMutation({
     mutationKey: ['template', 'delete'],
     mutationFn: (templateId: number) => {
       return API.TemplateAPI.DeleteTemplate(authToken!, templateId);
     },
     onSuccess: () => {
       refreshList();
+      notifications.show({
+        color: 'green',
+        message: '模板删除成功',
+      });
     },
   });
 

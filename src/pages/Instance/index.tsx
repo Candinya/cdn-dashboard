@@ -10,7 +10,7 @@ interface LastSeenStatProps {
   lastSeen: number;
 }
 const LastSeenStat = ({ isManualMode, lastSeen }: LastSeenStatProps) => {
-  const currentTs = new Date().getTime() / 1000; // 当前时间戳（秒）
+  const currentTs = Date.now() / 1000; // 当前时间戳（秒）
   const deltaTs = currentTs - lastSeen;
 
   return isManualMode ? (

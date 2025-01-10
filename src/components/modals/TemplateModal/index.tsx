@@ -2,7 +2,17 @@ import { useEffect, useState } from 'react';
 import { IconDeviceFloppy, IconPencil } from '@tabler/icons-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
-import { Button, Code, Group, Modal, TagsInput, Text, Textarea, TextInput } from '@mantine/core';
+import {
+  Button,
+  Code,
+  Flex,
+  Group,
+  Modal,
+  TagsInput,
+  Text,
+  Textarea,
+  TextInput,
+} from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import API from '@/api';
@@ -138,55 +148,62 @@ const TemplateModal = ({ isOpen, onClose, id }: TemplateModalProps) => {
 
   // 表单结构
   return (
-    <Modal opened={isOpen} onClose={onClose} title={id ? `编辑模板 #${id}` : '创建新模板'}>
+    <Modal
+      opened={isOpen}
+      onClose={onClose}
+      title={id ? `编辑模板 #${id}` : '创建新模板'}
+      size="xl"
+    >
       <form onSubmit={templateInfoForm.onSubmit(submitForm)}>
-        <TextInput
-          label="名称"
-          disabled={!isFormUnlocked}
-          {...templateInfoForm.getInputProps('name')}
-        />
-        <Textarea
-          label="描述"
-          disabled={!isFormUnlocked}
-          autosize
-          {...templateInfoForm.getInputProps('description')}
-        />
-        <Textarea
-          label="内容"
-          disabled={!isFormUnlocked}
-          minRows={3}
-          placeholder={'{{.Origin}} {\n    {{.Cert}}\n    reverse_proxy {{.Source}}\n}'}
-          autosize
-          {...templateInfoForm.getInputProps('content')}
-        />
-        <TagsInput
-          label="变量名"
-          disabled={!isFormUnlocked}
-          {...templateInfoForm.getInputProps('variables')}
-        />
+        <Flex direction="column" gap="sm">
+          <TextInput
+            label="名称"
+            disabled={!isFormUnlocked}
+            {...templateInfoForm.getInputProps('name')}
+          />
+          <Textarea
+            label="描述"
+            disabled={!isFormUnlocked}
+            autosize
+            {...templateInfoForm.getInputProps('description')}
+          />
+          <Textarea
+            label="内容"
+            disabled={!isFormUnlocked}
+            minRows={3}
+            placeholder={'{{.Origin}} {\n    {{.Cert}}\n    reverse_proxy {{.Source}}\n}'}
+            autosize
+            {...templateInfoForm.getInputProps('content')}
+          />
+          <TagsInput
+            label="变量名"
+            disabled={!isFormUnlocked}
+            {...templateInfoForm.getInputProps('variables')}
+          />
 
-        <Group justify="end" mt="sm">
-          {isFormUnlocked ? (
-            <Button
-              leftSection={<IconDeviceFloppy size={14} />}
-              type="submit"
-              loading={isUpdating || isCreating}
-            >
-              保存
-            </Button>
-          ) : (
-            <Button
-              color="green"
-              leftSection={<IconPencil size={14} />}
-              onClick={(ev) => {
-                ev.preventDefault();
-                setIsFormUnlocked(true);
-              }}
-            >
-              编辑
-            </Button>
-          )}
-        </Group>
+          <Group justify="end" mt="sm">
+            {isFormUnlocked ? (
+              <Button
+                leftSection={<IconDeviceFloppy size={14} />}
+                type="submit"
+                loading={isUpdating || isCreating}
+              >
+                保存
+              </Button>
+            ) : (
+              <Button
+                color="green"
+                leftSection={<IconPencil size={14} />}
+                onClick={(ev) => {
+                  ev.preventDefault();
+                  setIsFormUnlocked(true);
+                }}
+              >
+                编辑
+              </Button>
+            )}
+          </Group>
+        </Flex>
       </form>
     </Modal>
   );

@@ -2,14 +2,16 @@ import { appendQuery, BackendUri } from './common';
 
 export interface CertInfoInput {
   name: string;
+  is_manual_mode: boolean;
+
   domains: string[];
-  provider: string | null;
+  provider?: string | null;
 
-  certificate: string | null;
-  private_key: string | null;
-  intermediate_certificate: string | null;
+  certificate?: string | null;
+  private_key?: string | null;
+  intermediate_certificate?: string | null;
 
-  csr: string | null;
+  csr?: string | null;
 }
 
 export interface CertInfoWithExpiresAt extends CertInfoInput {
