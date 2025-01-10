@@ -1,12 +1,12 @@
 import { appendQuery, BackendUri } from './common';
 
 export interface AdditionalFileContent {
-  content: string; // file binary
+  content: File | null;
 }
 
 export interface AdditionalFileInfo {
   name: string;
-  filename: string;
+  filename?: string;
 }
 
 export type AdditionalFileInfoInput = AdditionalFileContent & AdditionalFileInfo;
@@ -74,15 +74,18 @@ const CreateAdditionalFile = async (
 ): Promise<AdditionalFileInfoWithID> => {
   const formData = new FormData();
   formData.append('name', input.name);
-  formData.append('filename', input.filename);
-  formData.append('content', input.content);
+  if (input.filename) {
+    formData.append('filename', input.filename);
+  }
+  if (input.content) {
+    formData.append('content', input.content);
+  }
 
   const endpoint = BackendUri + `/additional-file/create`;
   const res = await fetch(endpoint, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${authToken}`,
-      'Content-Type': 'multipart/form-data',
     },
     body: formData,
   }).then((res) =>
@@ -141,14 +144,15 @@ const ReplaceAdditionalFile = async (
   input: AdditionalFileContent
 ): Promise<AdditionalFileInfoWithID> => {
   const formData = new FormData();
-  formData.append('content', input.content);
+  if (input.content) {
+    formData.append('content', input.content);
+  }
 
   const endpoint = BackendUri + `/additional-file/replace/${id}`;
   const res = await fetch(endpoint, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${authToken}`,
-      'Content-Type': 'multipart/form-data',
     },
     body: formData,
   }).then((res) =>
