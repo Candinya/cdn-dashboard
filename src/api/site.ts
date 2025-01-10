@@ -3,7 +3,7 @@ import { appendQuery, BackendUri } from './common';
 export interface SiteInfoInput {
   name: string;
   origin: string;
-  cert_id: number;
+  cert_id: number | null;
   template_id: number;
   template_values: string[];
 }
