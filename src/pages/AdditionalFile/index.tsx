@@ -67,7 +67,6 @@ const AdditionalFile = () => {
   const deleteById = (info: AdditionalFileInfoWithID) =>
     modals.openConfirmModal({
       title: '删除额外文件',
-      centered: true,
       children: (
         <Text size="sm">
           您确认要删除额外文件 <Code>{info.name}</Code> 吗？

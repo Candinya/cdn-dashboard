@@ -45,7 +45,6 @@ const Self = () => {
   const openLogoutConfirmModal = () =>
     modals.openConfirmModal({
       title: '退出登录',
-      centered: true,
       children: <Text size="sm">您确认要退出登录吗？</Text>,
       labels: { confirm: '退出登录', cancel: '取消' },
       confirmProps: { color: 'red' },

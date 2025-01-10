@@ -56,7 +56,6 @@ const Site = () => {
   const deleteById = (info: SiteInfoWithID) =>
     modals.openConfirmModal({
       title: '删除站点',
-      centered: true,
       children: (
         <Text size="sm">
           您确认要删除站点 <Code>{info.name}</Code> 吗？

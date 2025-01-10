@@ -16,7 +16,7 @@ export interface InstanceInfoWithID extends InstanceInfoFull {
   id: number;
 }
 
-export interface InstanceInfoWithToken extends InstanceInfoFull {
+export interface InstanceInfoWithToken extends InstanceInfoWithID {
   token: string;
 }
 
@@ -119,7 +119,7 @@ const RegenerateInstanceToken = async (
   authToken: string,
   id: number
 ): Promise<InstanceInfoWithToken> => {
-  const endpoint = BackendUri + `/instance/token/${id}`;
+  const endpoint = BackendUri + `/instance/rotate-token/${id}`;
   const res = await fetch(endpoint, {
     method: 'POST',
     headers: {

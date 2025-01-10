@@ -66,7 +66,6 @@ const User = () => {
   const deleteUser = (userInfo: UserInfoWithID) =>
     modals.openConfirmModal({
       title: '删除用户',
-      centered: true,
       children: (
         <Text size="sm">
           您确认要删除用户 <Code>{userInfo.username}</Code> 吗？

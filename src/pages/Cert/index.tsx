@@ -92,7 +92,6 @@ const Cert = () => {
   const deleteById = (info: CertInfoWithID) =>
     modals.openConfirmModal({
       title: '删除证书',
-      centered: true,
       children: (
         <Text size="sm">
           您确认要删除证书 <Code>{info.name}</Code> 吗？

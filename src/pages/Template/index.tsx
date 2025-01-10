@@ -56,7 +56,6 @@ const Template = () => {
   const deleteById = (info: TemplateInfoWithID) =>
     modals.openConfirmModal({
       title: '删除模板',
-      centered: true,
       children: (
         <Text size="sm">
           您确认要删除模板 <Code>{info.name}</Code> 吗？

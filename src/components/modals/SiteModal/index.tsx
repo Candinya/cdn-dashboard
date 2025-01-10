@@ -42,13 +42,13 @@ const SiteModal = ({ isOpen, onClose, id }: SiteModalProps) => {
   });
 
   const { isPending: isLoadingCertList, data: certList } = useQuery({
-    queryKey: ['cert', 'list', 1],
-    queryFn: () => API.CertAPI.GetCertList(authToken!, 1, 100), // 这样不好，最好能找到一个合适的办法（这里没有考虑超过 100 张证书的情况）
+    queryKey: ['cert', 'list', 'all'],
+    queryFn: () => API.CertAPI.GetCertList(authToken!, 0, 0),
   });
 
   const { isPending: isLoadingTemplateList, data: templateList } = useQuery({
-    queryKey: ['template', 'list', 1],
-    queryFn: () => API.TemplateAPI.GetTemplateList(authToken!, 1, 100), // 同上
+    queryKey: ['template', 'list', 'all'],
+    queryFn: () => API.TemplateAPI.GetTemplateList(authToken!, 0, 0),
   });
 
   const [selectedTemplateId, setSelectedTemplateId] = useState<number | null>(null);
@@ -220,6 +220,7 @@ const SiteModal = ({ isOpen, onClose, id }: SiteModalProps) => {
                 label: cert.name,
               })) || []
             }
+            searchable
             {...siteInfoForm.getInputProps('cert_id')}
           />
 
@@ -233,6 +234,7 @@ const SiteModal = ({ isOpen, onClose, id }: SiteModalProps) => {
               })) || []
             }
             allowDeselect={false}
+            searchable
             {...siteInfoForm.getInputProps('template_id')}
           />
 
