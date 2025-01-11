@@ -12,4 +12,5 @@ export const selfInfoAtom = atomWithQuery((get) => ({
       return null;
     }
   },
+  retry: false,
 }));
